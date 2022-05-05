@@ -45,3 +45,45 @@ future features??:
     - download-server -- unregister api endpoint
 
 all the while, updating web ui
+
+
+PC-browser
+===============================
+required -- meta tag
+<meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+NOTE: meta tag, may or may not require IP/domain at end of tag
+NOTE: will have to hit 256 IP addresses, choose the first that returns 200
+
+DEVICE
+===============================
+must have??
+
+add_header Access-Control-Allow-Origin *;
+
+DIAGRAM
+===============================
+
+      PC  -  192.168.0.11                                    Handheld   - 192.168.172.11
+
+      ┌──────────────────────────────────┐                   ┌─────────────────────────────────┐
+      │  Browser: crunchi.com/somegame   │                   │   Device: golang server         │
+      │ ┌──────────────────────────────┐ │                   │                                 │
+      │ │                              │ │                   │  ┌────────────────────────────┐ │
+      │ │SOMEGAME!                     │ │                   │  │ /games                     │ │
+      │ │                              │ │ USB(eth0)         │  │ /games/new                 │ │
+      │ │like doom,                    │ │                   │  │ /games/[id]/status         │ │
+      │ │but not.     ┌──────────────┐ │ ├─────────────────► │  │                            │ │
+      │ │             │ INSTALL      │ │ │                   │  │                            │ │
+      │ │             └┬─────────────┘ │ │ ◄─────────────────┤  │                            │ │
+      │ │              │               │ │                   │  └──────┬─────────────────────┘ │
+      │ └──────────────┼───────────────┘ │                   │         │                       │
+      │                │                 │                   │  ┌──────▼─────────────────────┐ │
+      │  ┌─────────────┴───────────────┐ │                   │  │Filesystem: ~/              │ │
+      │  │.js                          │ │                   │  │                            │ │
+      │  │                             │ │                   │  │ some.tar.gz                │ │
+    id│= │http.post(g_url, 192.168.172.11/games/new)         │  │ some_abcdefgabcdef         │ │
+    st│= │http.get(192.168.172.11/games/$id/status)          │  │ fart_bcdefgabcdefg         │ │
+      │  │div(progress)=st.percent     │ │                   │  │ cool_cdefgabcdefga         │ │
+      │  └─────────────────────────────┘ │                   │  └────────────────────────────┘ │
+      │                                  │                   │                                 │
+      └──────────────────────────────────┘                   └─────────────────────────────────┘
